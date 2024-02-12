@@ -3,7 +3,7 @@ import { Button, Form, Input, Space } from "antd";
 
 interface AddEditBoardTitleProps {
   setIsEditMode: Dispatch<SetStateAction<boolean>>;
-  onSubmit: (name: string) => void;
+  onSubmit: (data: { name: string }) => void;
   initialValues?: { name: string };
 }
 
@@ -15,8 +15,8 @@ export const AddEditBoardTitle: FC<AddEditBoardTitleProps> = ({
   const [form] = Form.useForm();
 
   const handleSubmit = useCallback(
-    (name: string) => {
-      onSubmit(name);
+    (data: { name: string }) => {
+      onSubmit(data);
       setIsEditMode(false);
     },
     [onSubmit, setIsEditMode]
@@ -57,7 +57,11 @@ export const AddEditBoardTitle: FC<AddEditBoardTitleProps> = ({
           <Button type="primary" htmlType="submit">
             Submit
           </Button>
-          <Button type="default" onClick={handleCancel}>
+          <Button
+            type="default"
+            onClick={handleCancel}
+            style={{ backgroundColor: "#faad14", borderColor: "#faad14" }}
+          >
             Cancel
           </Button>
         </Space>

@@ -27,8 +27,8 @@ export const BoardsListPage: React.FC = () => {
   const { create, isPending: isLoadingNewBoard } = useCreateBoard();
 
   const handleSubmit = useCallback(
-    (name: string) => {
-      create(name);
+    (data: { name: string }) => {
+      create(data);
       setIsCreateModeBoard(false);
     },
     [create]
@@ -55,7 +55,7 @@ export const BoardsListPage: React.FC = () => {
 
   return (
     <Layout>
-      <Content style={{ padding: "24px", width: "1240px", margin: "auto" }}>
+      <Content style={{ padding: "24px", maxWidth: "1440px", margin: "auto" }}>
         <Space direction="vertical" style={{ width: "100%" }}>
           <Row gutter={16} style={{ marginBottom: "15px" }}>
             <Col span={24}>

@@ -5,7 +5,12 @@ import { useDeleteTodo } from "../../hooks/useDeleteTodo";
 import { useUpdateTodo } from "../../hooks/useUpdateTodo";
 import { ITodo } from "../../types";
 import { AddEditTodo } from "../AddEditTodo";
-import { Draggable } from "react-beautiful-dnd";
+import {
+  Draggable,
+  DraggableProvided,
+  DraggableStateSnapshot,
+} from "react-beautiful-dnd";
+import { DeleteConfirmationModal } from "../DeleteConfirmationModal/DeleteConfirmationModal";
 
 interface TodoProps {
   todoId: string;
@@ -23,6 +28,7 @@ export const Todo: FC<TodoProps> = ({
   index,
 }) => {
   const [isEditTodo, setIsEditTodo] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const { remove } = useDeleteTodo(boardId);
   const { update } = useUpdateTodo();
   const [form] = Form.useForm();
@@ -44,7 +50,16 @@ export const Todo: FC<TodoProps> = ({
   };
 
   const handleDelete = () => {
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleConfirmDelete = () => {
     remove(todoId);
+    setIsDeleteModalVisible(false);
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteModalVisible(false);
   };
 
   return (
@@ -57,17 +72,16 @@ export const Todo: FC<TodoProps> = ({
         />
       ) : (
         <Draggable draggableId={todoId} index={index}>
-          {(provided) => (
+          {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
             <div
               ref={provided.innerRef}
               {...provided.draggableProps}
               {...provided.dragHandleProps}
-              draggable={true}
               style={{
                 border: "1px solid #ccc",
                 padding: "16px",
                 borderRadius: "8px",
-                backgroundColor: "#f5f5f5",
+                backgroundColor: snapshot.isDragging ? "#d3ffd3" : "#f5f5f5",
                 display: "flex",
                 flexDirection: "column",
                 marginTop: "16px",
@@ -99,6 +113,12 @@ export const Todo: FC<TodoProps> = ({
           )}
         </Draggable>
       )}
+      <DeleteConfirmationModal
+        isVisible={isDeleteModalVisible}
+        onCancel={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        modalInformation="Are you sure you want to delete this todo?"
+      />
     </>
   );
 };

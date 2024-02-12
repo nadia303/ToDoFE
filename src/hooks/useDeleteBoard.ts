@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { deleteBoard } from "../api";
+import { QueryKey } from "../types/queryKey";
 
 export const useDeleteBoard = () => {
   const queryClient = useQueryClient();
@@ -8,7 +9,7 @@ export const useDeleteBoard = () => {
   const { mutate, ...rest } = useMutation({
     mutationFn: deleteBoard,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getAllBoards"] });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllBoards] });
     },
   });
 

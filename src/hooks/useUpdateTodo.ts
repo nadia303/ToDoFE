@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { patchTodo } from "../api/todosQueryApi";
 import { ITodo } from "../types";
+import { QueryKey } from "../types/queryKey";
 
 export const useUpdateTodo = () => {
   const queryClient = useQueryClient();
@@ -9,7 +10,7 @@ export const useUpdateTodo = () => {
   const { mutate, ...rest } = useMutation({
     mutationFn: patchTodo,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getAllBoards"] });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllBoards] });
     },
   });
 

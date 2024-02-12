@@ -42,9 +42,15 @@ export const Card: React.FC<CardProps> = ({
     <BasicCard
       size="small"
       title={title}
-      style={{ background: "#a6c7e0", height: "100%" }}
+      style={{
+        background: "#a6c7e0",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        minWidth: "250px",
+      }}
     >
-      <Droppable droppableId={status} type="group">
+      <Droppable droppableId={status}>
         {(provided) => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
             {todos.map(({ title, description, _id }: ITodo, index: number) => (
@@ -61,19 +67,18 @@ export const Card: React.FC<CardProps> = ({
           </div>
         )}
       </Droppable>
-
       {isEditMode && status === TodoStatus.TODO && (
         <AddEditTodo setIsEditMode={setIsEditMode} onSubmit={handleOnCreate} />
       )}
-
       {status === TodoStatus.TODO && (
         <Button
           onClick={handleOnAddTodo}
           disabled={isEditMode}
           type="dashed"
           style={{
-            marginTop: "20px",
             width: "100%",
+            marginTop: "20px",
+            alignSelf: "flex-start",
             backgroundColor: "#1890ff",
             borderColor: "#1890ff",
             color: "#fff",

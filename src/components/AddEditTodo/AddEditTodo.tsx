@@ -76,11 +76,7 @@ export const AddEditTodo: FC<AddTodoProps> = ({
           <TextArea />
         </Form.Item>
         <Space style={{ justifyContent: "flex-end", marginTop: "8px" }}>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
-          >
+          <Button type="primary" htmlType="submit">
             Submit
           </Button>
           <Button

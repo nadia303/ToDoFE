@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { postBoard } from "../api/boardsQueryApi";
+import { QueryKey } from "../types/queryKey";
 
 export const useCreateBoard = () => {
   const queryClient = useQueryClient();
@@ -8,13 +9,13 @@ export const useCreateBoard = () => {
   const { mutate, ...rest } = useMutation({
     mutationFn: postBoard,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getAllBoards"] });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.GetAllBoards] });
     },
   });
 
   const create = useCallback(
-    (name: string) => {
-      mutate({ name });
+    (data: { name: string }) => {
+      mutate(data);
     },
     [mutate]
   );

@@ -19,6 +19,8 @@ import { TodoStatus } from "../../types/status";
 import { AddEditBoardTitle } from "../AddEditBoardTile";
 import { DragDropContext, DragDropContextProps } from "react-beautiful-dnd";
 import { useUpdateTodo } from "../../hooks/useUpdateTodo";
+import { getTodosByStatus } from "../../helpers/getTodosByStatus";
+import { DeleteConfirmationModal } from "../DeleteConfirmationModal/DeleteConfirmationModal";
 
 const { Title } = Typography;
 
@@ -34,21 +36,24 @@ export const Board: React.FC<BoardProps> = ({
   initialTodos,
 }) => {
   const [todoColumns, setTodoColumns] = useState({
-    todo: initialTodos.filter((todo) => todo.status === TodoStatus.TODO),
-    in_progress: initialTodos.filter(
-      (todo) => todo.status === TodoStatus.IN_PROGRESS
-    ),
-    done: initialTodos.filter((todo) => todo.status === TodoStatus.DONE),
+    todo: getTodosByStatus(initialTodos, TodoStatus.TODO),
+    in_progress: getTodosByStatus(initialTodos, TodoStatus.IN_PROGRESS),
+    done: getTodosByStatus(initialTodos, TodoStatus.DONE),
   });
   const [isEditModeBoard, setIsEditModeBoard] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const { update: updateBoard, isPending: isLoadingUpdate } = useUpdateBoard();
   const { remove, isPending: isLoadingDelete } = useDeleteBoard();
   const { update: updateTodo } = useUpdateTodo();
   const [form] = Form.useForm();
 
-  // useEffect(() => {
-  //   setTodos(initialTodos);
-  // }, [initialTodos]);
+  useEffect(() => {
+    setTodoColumns({
+      todo: getTodosByStatus(initialTodos, TodoStatus.TODO),
+      in_progress: getTodosByStatus(initialTodos, TodoStatus.IN_PROGRESS),
+      done: getTodosByStatus(initialTodos, TodoStatus.DONE),
+    });
+  }, [initialTodos]);
 
   const handleEdit = () => {
     setIsEditModeBoard(true);
@@ -58,11 +63,20 @@ export const Board: React.FC<BoardProps> = ({
   };
 
   const handleDelete = () => {
-    remove(boardId);
+    setIsDeleteModalVisible(true);
   };
 
-  const handleUpdate = (name: string) => {
-    updateBoard({ name, boardId });
+  const handleConfirmDelete = () => {
+    remove(boardId);
+    setIsDeleteModalVisible(false);
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteModalVisible(false);
+  };
+
+  const handleUpdate = (data: { name: string }) => {
+    updateBoard({ name: data.name, boardId });
     setIsEditModeBoard(false);
   };
 
@@ -112,7 +126,7 @@ export const Board: React.FC<BoardProps> = ({
     <DragDropContext onDragEnd={handleDragEnd}>
       <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         {isEditModeBoard ? (
-          <BasicCard style={{ marginBottom: "16px" }}>
+          <BasicCard style={{ marginBottom: "16px", minWidth: "250px" }}>
             <AddEditBoardTitle
               setIsEditMode={setIsEditModeBoard}
               onSubmit={handleUpdate}
@@ -168,6 +182,12 @@ export const Board: React.FC<BoardProps> = ({
             />
           </Col>
         </Row>
+        <DeleteConfirmationModal
+          isVisible={isDeleteModalVisible}
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+          modalInformation="Are you sure you want to delete this board?"
+        />
       </div>
     </DragDropContext>
   );
