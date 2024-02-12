@@ -1,7 +1,8 @@
 import { TodoStatus } from "./status";
 
 export interface ITodo {
-  id: string;
+  _id: string;
+  boardId: string;
   title: string;
   status: TodoStatus;
   description: string;

@@ -1,10 +1,9 @@
 import { Dispatch, FC, SetStateAction, useCallback, useEffect } from "react";
 import { Button, Form, Input, Space } from "antd";
-import { IBoard } from "../../types";
 
 interface AddEditBoardTitleProps {
   setIsEditMode: Dispatch<SetStateAction<boolean>>;
-  onSubmit: (data: IBoard) => void;
+  onSubmit: (name: string) => void;
   initialValues?: { name: string };
 }
 
@@ -16,8 +15,8 @@ export const AddEditBoardTitle: FC<AddEditBoardTitleProps> = ({
   const [form] = Form.useForm();
 
   const handleSubmit = useCallback(
-    (data: IBoard) => {
-      onSubmit(data);
+    (name: string) => {
+      onSubmit(name);
       setIsEditMode(false);
     },
     [onSubmit, setIsEditMode]

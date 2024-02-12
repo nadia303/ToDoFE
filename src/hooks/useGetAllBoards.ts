@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAllBoards } from "../api/boardsQueryApi";
 
-export const useGetAllBoards = () => {
+export const useGetAllBoards = (id?: string) => {
   const { data, isLoading, isFetching, fetchStatus, ...rest } = useQuery({
-    queryKey: ["getAllBoards"],
-    queryFn: () => getAllBoards(),
+    queryKey: ["getAllBoards", id],
+    queryFn: () => getAllBoards(id),
   });
 
   return {

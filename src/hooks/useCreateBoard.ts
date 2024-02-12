@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { postBoard } from "../api/boardsQueryApi";
-import { IBoard } from "../types";
 
 export const useCreateBoard = () => {
   const queryClient = useQueryClient();
@@ -14,9 +13,7 @@ export const useCreateBoard = () => {
   });
 
   const create = useCallback(
-    (payload: IBoard) => {
-      const { name } = payload;
-
+    (name: string) => {
       mutate({ name });
     },
     [mutate]

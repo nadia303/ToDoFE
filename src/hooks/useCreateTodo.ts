@@ -9,7 +9,7 @@ export const useCreateTodo = (boardId: string) => {
   const { mutate, ...rest } = useMutation({
     mutationFn: postTodo,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getAllTodos", boardId] });
+      queryClient.invalidateQueries({ queryKey: ["getAllBoards"] });
     },
   });
 

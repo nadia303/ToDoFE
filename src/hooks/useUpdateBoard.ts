@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { IBoard } from "../types";
+import { UpdateBoardParams } from "../types";
 import { updateBoard } from "../api";
 
 export const useUpdateBoard = () => {
@@ -14,8 +14,8 @@ export const useUpdateBoard = () => {
   });
 
   const update = useCallback(
-    (payload: IBoard, boardId: string) => {
-      mutate({ id: boardId, data: payload });
+    (params: UpdateBoardParams) => {
+      mutate(params);
     },
     [mutate]
   );

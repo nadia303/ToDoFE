@@ -1,5 +1,15 @@
 import React, { useCallback, useState } from "react";
-import { Button, Space, Row, Col, Typography, Card, Layout } from "antd";
+import {
+  Button,
+  Space,
+  Row,
+  Col,
+  Typography,
+  Card,
+  Layout,
+  Input,
+  Spin,
+} from "antd";
 import { useGetAllBoards } from "../../hooks/useGetAllBoards";
 import { useCreateBoard } from "../../hooks/useCreateBoard";
 import { Board } from "../../components/Board";
@@ -8,16 +18,17 @@ import { IBoard } from "../../types";
 
 const { Title } = Typography;
 const { Content } = Layout;
+const { Search } = Input;
 
 export const BoardsListPage: React.FC = () => {
-  const { data } = useGetAllBoards();
-
+  const [searchId, setSearchId] = useState("");
   const [isCreateModeBoard, setIsCreateModeBoard] = useState(false);
-  const { create, isPending } = useCreateBoard();
+  const { data, isPending: isLoadingBoards } = useGetAllBoards(searchId);
+  const { create, isPending: isLoadingNewBoard } = useCreateBoard();
 
   const handleSubmit = useCallback(
-    (data: IBoard) => {
-      create(data);
+    (name: string) => {
+      create(name);
       setIsCreateModeBoard(false);
     },
     [create]
@@ -27,18 +38,41 @@ export const BoardsListPage: React.FC = () => {
     setIsCreateModeBoard(true);
   };
 
+  const handleSearch = (value: string) => {
+    setSearchId(value);
+  };
+
+  if (isLoadingBoards || isLoadingNewBoard) {
+    return (
+      <Space
+        direction="vertical"
+        style={{ width: "100%", textAlign: "center" }}
+      >
+        <Spin size="large" fullscreen />
+      </Space>
+    );
+  }
+
   return (
     <Layout>
-      <Content style={{ padding: "24px", maxWidth: "1440px", margin: "auto" }}>
+      <Content style={{ padding: "24px", width: "1240px", margin: "auto" }}>
         <Space direction="vertical" style={{ width: "100%" }}>
-          {data?.data.map(({ id, name }: any) => (
+          <Row gutter={16} style={{ marginBottom: "15px" }}>
+            <Col span={24}>
+              <Search
+                placeholder="Enter a board ID here"
+                enterButton
+                onSearch={handleSearch}
+              />
+            </Col>
+          </Row>
+          {data?.data.map(({ id, name, todos }: IBoard) => (
             <Row gutter={16} key={id} style={{ marginBottom: "25px" }}>
               <Col xs={24}>
-                <Board boardName={name} boardId={id} />
+                <Board boardName={name} boardId={id} initialTodos={todos} />
               </Col>
             </Row>
           ))}
-
           {isCreateModeBoard && (
             <Card style={{ marginBottom: 16 }}>
               <Title level={4}>Create New Board</Title>
@@ -48,7 +82,6 @@ export const BoardsListPage: React.FC = () => {
               />
             </Card>
           )}
-
           <Button
             disabled={isCreateModeBoard}
             onClick={handleOnClick}

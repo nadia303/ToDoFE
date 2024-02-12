@@ -37,22 +37,30 @@ export const deleteBoard = ({ boardId }: DeleteBoardParams): Promise<void> => {
   });
 };
 
-export const getAllBoards = () => {
+export const getAllBoards = (id?: string) => {
   return api({
     method: "get",
-    url: `/boards`,
+    url: `/boards?id=${id}`,
   });
 };
 
 export interface UpdateBoardParams {
-  id: string;
-  data: IBoard;
+  boardId: string;
+  name?: string;
+  todoIds?: string[];
 }
 
-export const updateBoard = ({ id, data }: UpdateBoardParams) => {
+export const updateBoard = ({ boardId, ...data }: UpdateBoardParams) => {
   return api({
-    method: "put",
-    url: `/boards/${id}`,
+    method: "patch",
+    url: `/boards/${boardId}`,
     data,
+  });
+};
+
+export const getAllTodosByBoardId = (id?: string) => {
+  return api({
+    method: "get",
+    url: `/boards/${id}/todos`,
   });
 };

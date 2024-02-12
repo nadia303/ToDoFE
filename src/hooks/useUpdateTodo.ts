@@ -1,20 +1,20 @@
 import { useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateTodo } from "../api/todosQueryApi";
+import { patchTodo } from "../api/todosQueryApi";
 import { ITodo } from "../types";
 
-export const useUpdateTodo = (boardId: string) => {
+export const useUpdateTodo = () => {
   const queryClient = useQueryClient();
 
   const { mutate, ...rest } = useMutation({
-    mutationFn: updateTodo,
+    mutationFn: patchTodo,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getAllTodos", boardId] });
+      queryClient.invalidateQueries({ queryKey: ["getAllBoards"] });
     },
   });
 
   const update = useCallback(
-    (payload: ITodo, todoId: string) => {
+    (todoId: string, payload: Partial<ITodo>) => {
       mutate({ id: todoId, data: payload });
     },
     [mutate]

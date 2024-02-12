@@ -1,15 +1,13 @@
 import { ITodo } from "../types";
-import { TodoStatus } from "../types/status";
 import { api } from "./api";
-
-export interface UpdateTodoParams {
+export interface PatchTodoParams {
   id: string;
-  data: ITodo;
+  data: Partial<ITodo>;
 }
 
-export const updateTodo = ({ id, data }: UpdateTodoParams) => {
+export const patchTodo = ({ id, data }: PatchTodoParams) => {
   return api({
-    method: "put",
+    method: "patch",
     url: `/todos/${id}`,
     data,
   });
@@ -34,26 +32,16 @@ export const postTodo = ({
 };
 
 export interface DeleteTaskParams {
-  id?: string;
+  boardId: string;
+  todoId: string;
 }
 
-export const deleteTodo = ({ id }: DeleteTaskParams): Promise<void> => {
+export const deleteTodo = ({
+  boardId,
+  todoId,
+}: DeleteTaskParams): Promise<void> => {
   return api({
     method: "delete",
-    url: `/todos/${id}`,
-  });
-};
-
-export interface GetAllTodosParams {
-  boardId: string;
-  status: TodoStatus;
-}
-
-export const getAllTodos = ({ boardId, status }: GetAllTodosParams) => {
-  console.log("getAllTodos");
-  console.log({ status });
-  return api({
-    method: "get",
-    url: `/todos/byBoard/${boardId}?status=${status}`,
+    url: `/todos/${boardId}/${todoId}`,
   });
 };

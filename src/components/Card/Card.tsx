@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
-import { Card as BasicCard, Button } from "antd";
+import { Card as BasicCard, Button, Spin } from "antd";
+import { Droppable } from "react-beautiful-dnd";
 import { Todo } from "../Todo";
-import { useGetAllTodos } from "../../hooks/useGetAllTodos";
 import { AddEditTodo } from "../AddEditTodo";
 import { ITodo } from "../../types";
 import { TodoStatus } from "../../types/status";
@@ -11,12 +11,17 @@ interface CardProps {
   title: string;
   boardId: string;
   status: TodoStatus;
+  todos: ITodo[];
 }
 
-export const Card: React.FC<CardProps> = ({ boardId, title, status }) => {
+export const Card: React.FC<CardProps> = ({
+  boardId,
+  title,
+  status,
+  todos,
+}) => {
   const [isEditMode, setIsEditMode] = useState(false);
-  const { data } = useGetAllTodos(boardId, status);
-  const { create } = useCreateTodo(boardId);
+  const { create, isPending: isLoadingCreate } = useCreateTodo(boardId);
 
   const handleOnAddTodo = () => {
     setIsEditMode(true);
@@ -29,26 +34,38 @@ export const Card: React.FC<CardProps> = ({ boardId, title, status }) => {
     [create]
   );
 
+  if (isLoadingCreate) {
+    return <Spin size="large" fullscreen />;
+  }
+
   return (
     <BasicCard
       size="small"
       title={title}
-      style={{ background: "#b7eb8f", height: "100%" }}
+      style={{ background: "#a6c7e0", height: "100%" }}
     >
-      {data?.data?.map(({ title, description, id }: ITodo) => {
-        return (
-          <Todo
-            key={id}
-            title={title}
-            description={description}
-            todoId={id}
-            boardId={boardId}
-          />
-        );
-      })}
+      <Droppable droppableId={status} type="group">
+        {(provided) => (
+          <div ref={provided.innerRef} {...provided.droppableProps}>
+            {todos.map(({ title, description, _id }: ITodo, index: number) => (
+              <Todo
+                key={_id}
+                title={title}
+                description={description}
+                todoId={_id}
+                boardId={boardId}
+                index={index}
+              />
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+
       {isEditMode && status === TodoStatus.TODO && (
         <AddEditTodo setIsEditMode={setIsEditMode} onSubmit={handleOnCreate} />
       )}
+
       {status === TodoStatus.TODO && (
         <Button
           onClick={handleOnAddTodo}

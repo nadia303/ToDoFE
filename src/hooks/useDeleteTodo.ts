@@ -8,15 +8,15 @@ export const useDeleteTodo = (boardId: string) => {
   const { mutate, ...rest } = useMutation({
     mutationFn: deleteTodo,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getAllTodos", boardId] });
+      queryClient.invalidateQueries({ queryKey: ["getAllBoards"] });
     },
   });
 
   const remove = useCallback(
-    (id: string) => {
-      mutate({ id });
+    (todoId: string) => {
+      mutate({ boardId, todoId });
     },
-    [mutate]
+    [boardId, mutate]
   );
 
   return {
