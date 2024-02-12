@@ -1,1 +1,1 @@
-export { AddEditBoardTitle } from "./AddEditBoardTitle";
+export { AddEditBoardTitle } from './AddEditBoardTitle'

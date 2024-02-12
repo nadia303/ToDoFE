@@ -1,2 +1,2 @@
-export * from "./boardsQueryApi";
-export * from "./todosQueryApi";
+export * from './boardsQueryApi'
+export * from './todosQueryApi'

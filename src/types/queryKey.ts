@@ -1,3 +1,3 @@
 export enum QueryKey {
-  GetAllBoards = "getAllBoards",
+  GetAllBoards = 'getAllBoards',
 }

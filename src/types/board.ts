@@ -1,13 +1,13 @@
-import { ITodo } from "./todo";
+import { ITodo } from './todo'
 
 export interface IBoard {
-  id: string;
-  name: string;
-  todos: ITodo[];
+  id: string
+  name: string
+  todos: ITodo[]
 }
 
 export interface UpdateBoardParams {
-  boardId: string;
-  name?: string;
-  todoIds?: string[];
+  boardId: string
+  name?: string
+  todoIds?: string[]
 }

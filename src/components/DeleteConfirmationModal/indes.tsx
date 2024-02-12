@@ -1,1 +1,1 @@
-export { DeleteConfirmationModal } from "./DeleteConfirmationModal";
+export { DeleteConfirmationModal } from './DeleteConfirmationModal'

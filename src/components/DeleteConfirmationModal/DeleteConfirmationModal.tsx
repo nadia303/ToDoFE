@@ -1,18 +1,21 @@
-import React from "react";
-import { Modal, Typography } from "antd";
+import React from 'react'
+import { Modal, Typography } from 'antd'
 
-const { Text } = Typography;
+const { Text } = Typography
 
 interface DeleteConfirmationModalProps {
-  isVisible: boolean;
-  modalInformation: string;
-  onCancel: () => void;
-  onConfirm: () => void;
+  isVisible: boolean
+  modalInformation: string
+  onCancel: () => void
+  onConfirm: () => void
 }
 
-export const DeleteConfirmationModal: React.FC<
-  DeleteConfirmationModalProps
-> = ({ isVisible, onCancel, onConfirm, modalInformation }) => {
+export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
+  isVisible,
+  onCancel,
+  onConfirm,
+  modalInformation,
+}) => {
   return (
     <Modal
       title="Confirm Delete"
@@ -24,5 +27,5 @@ export const DeleteConfirmationModal: React.FC<
     >
       <Text>{modalInformation}</Text>
     </Modal>
-  );
-};
+  )
+}

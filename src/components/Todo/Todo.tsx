@@ -1,75 +1,61 @@
-import { FC, useCallback, useState } from "react";
-import { Button, Space, Typography, Form } from "antd";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { useDeleteTodo } from "../../hooks/useDeleteTodo";
-import { useUpdateTodo } from "../../hooks/useUpdateTodo";
-import { ITodo } from "../../types";
-import { AddEditTodo } from "../AddEditTodo";
-import {
-  Draggable,
-  DraggableProvided,
-  DraggableStateSnapshot,
-} from "react-beautiful-dnd";
-import { DeleteConfirmationModal } from "../DeleteConfirmationModal/DeleteConfirmationModal";
+import { FC, useCallback, useState } from 'react'
+import { Button, Space, Typography, Form } from 'antd'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { useDeleteTodo } from '../../hooks/useDeleteTodo'
+import { useUpdateTodo } from '../../hooks/useUpdateTodo'
+import { ITodo } from '../../types'
+import { AddEditTodo } from '../AddEditTodo'
+import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd'
+import { DeleteConfirmationModal } from '../DeleteConfirmationModal/DeleteConfirmationModal'
 
 interface TodoProps {
-  todoId: string;
-  boardId: string;
-  title: string;
-  index: number;
-  description: string;
+  todoId: string
+  boardId: string
+  title: string
+  index: number
+  description: string
 }
 
-export const Todo: FC<TodoProps> = ({
-  todoId,
-  boardId,
-  title,
-  description,
-  index,
-}) => {
-  const [isEditTodo, setIsEditTodo] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const { remove } = useDeleteTodo(boardId);
-  const { update } = useUpdateTodo();
-  const [form] = Form.useForm();
+export const Todo: FC<TodoProps> = ({ todoId, boardId, title, description, index }) => {
+  const [isEditTodo, setIsEditTodo] = useState(false)
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
+  const { remove } = useDeleteTodo(boardId)
+  const { update } = useUpdateTodo()
+  const [form] = Form.useForm()
 
   const handleUpdate = useCallback(
     (data: ITodo) => {
-      update(todoId, data);
-      setIsEditTodo(false);
+      update(todoId, data)
+      setIsEditTodo(false)
     },
-    [update, todoId]
-  );
+    [update, todoId],
+  )
 
   const handleEdit = () => {
-    setIsEditTodo(true);
+    setIsEditTodo(true)
     form.setFieldsValue({
       title,
       description,
-    });
-  };
+    })
+  }
 
   const handleDelete = () => {
-    setIsDeleteModalVisible(true);
-  };
+    setIsDeleteModalVisible(true)
+  }
 
   const handleConfirmDelete = () => {
-    remove(todoId);
-    setIsDeleteModalVisible(false);
-  };
+    remove(todoId)
+    setIsDeleteModalVisible(false)
+  }
 
   const handleCancelDelete = () => {
-    setIsDeleteModalVisible(false);
-  };
+    setIsDeleteModalVisible(false)
+  }
 
   return (
     <>
       {isEditTodo ? (
-        <AddEditTodo
-          setIsEditMode={setIsEditTodo}
-          onSubmit={handleUpdate}
-          initialValues={{ title, description }}
-        />
+        <AddEditTodo setIsEditMode={setIsEditTodo} onSubmit={handleUpdate} initialValues={{ title, description }} />
       ) : (
         <Draggable draggableId={todoId} index={index}>
           {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
@@ -78,35 +64,28 @@ export const Todo: FC<TodoProps> = ({
               {...provided.draggableProps}
               {...provided.dragHandleProps}
               style={{
-                border: "1px solid #ccc",
-                padding: "16px",
-                borderRadius: "8px",
-                backgroundColor: snapshot.isDragging ? "#d3ffd3" : "#f5f5f5",
-                display: "flex",
-                flexDirection: "column",
-                marginTop: "16px",
+                border: '1px solid #ccc',
+                padding: '16px',
+                borderRadius: '8px',
+                backgroundColor: snapshot.isDragging ? '#d3ffd3' : '#f5f5f5',
+                display: 'flex',
+                flexDirection: 'column',
+                marginTop: '16px',
                 ...provided.draggableProps.style,
               }}
             >
-              <Typography.Title
-                level={5}
-                style={{ marginBottom: "8px", color: "#1890ff" }}
-              >
+              <Typography.Title level={5} style={{ marginBottom: '8px', color: '#1890ff' }}>
                 {title}
               </Typography.Title>
-              <div style={{ whiteSpace: "pre-line", flex: 1 }}>
+              <div style={{ whiteSpace: 'pre-line', flex: 1 }}>
                 <Typography.Paragraph>{description}</Typography.Paragraph>
               </div>
-              <Space style={{ justifyContent: "flex-end", marginTop: "8px" }}>
+              <Space style={{ justifyContent: 'flex-end', marginTop: '8px' }}>
                 <Button type="link" onClick={handleEdit}>
-                  <EditOutlined
-                    style={{ color: "#1890ff", fontSize: "16px" }}
-                  />
+                  <EditOutlined style={{ color: '#1890ff', fontSize: '16px' }} />
                 </Button>
                 <Button type="link" onClick={handleDelete}>
-                  <DeleteOutlined
-                    style={{ color: "#ff4d4f", fontSize: "16px" }}
-                  />
+                  <DeleteOutlined style={{ color: '#ff4d4f', fontSize: '16px' }} />
                 </Button>
               </Space>
             </div>
@@ -120,5 +99,5 @@ export const Todo: FC<TodoProps> = ({
         modalInformation="Are you sure you want to delete this todo?"
       />
     </>
-  );
-};
+  )
+}

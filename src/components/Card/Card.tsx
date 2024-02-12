@@ -1,67 +1,58 @@
-import React, { useCallback, useState } from "react";
-import { Card as BasicCard, Button, Spin } from "antd";
-import { Droppable } from "react-beautiful-dnd";
-import { Todo } from "../Todo";
-import { AddEditTodo } from "../AddEditTodo";
-import { ITodo } from "../../types";
-import { TodoStatus } from "../../types/status";
-import { useCreateTodo } from "../../hooks/useCreateTodo";
+import React, { useCallback, useState } from 'react'
+import { Card as BasicCard, Button } from 'antd'
+import { Droppable } from 'react-beautiful-dnd'
+import { Todo } from '../Todo'
+import { AddEditTodo } from '../AddEditTodo'
+import { ITodo } from '../../types'
+import { TodoStatus } from '../../types/status'
+import { useCreateTodo } from '../../hooks/useCreateTodo'
 
 interface CardProps {
-  title: string;
-  boardId: string;
-  status: TodoStatus;
-  todos: ITodo[];
+  title: string
+  boardId: string
+  status: TodoStatus
+  todos: ITodo[]
 }
 
-export const Card: React.FC<CardProps> = ({
-  boardId,
-  title,
-  status,
-  todos,
-}) => {
-  const [isEditMode, setIsEditMode] = useState(false);
-  const { create, isPending: isLoadingCreate } = useCreateTodo(boardId);
+export const Card: React.FC<CardProps> = ({ boardId, title, status, todos }) => {
+  const [isEditMode, setIsEditMode] = useState(false)
+  const { create, isPending: isLoadingCreate } = useCreateTodo(boardId)
 
   const handleOnAddTodo = () => {
-    setIsEditMode(true);
-  };
+    setIsEditMode(true)
+  }
 
   const handleOnCreate = useCallback(
     (data: ITodo) => {
-      create(data);
+      create(data)
     },
-    [create]
-  );
-
-  if (isLoadingCreate) {
-    return <Spin size="large" fullscreen />;
-  }
+    [create],
+  )
 
   return (
     <BasicCard
       size="small"
       title={title}
+      loading={isLoadingCreate}
       style={{
-        background: "#a6c7e0",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        minWidth: "250px",
+        background: '#a6c7e0',
+        minWidth: '250px',
       }}
     >
       <Droppable droppableId={status}>
         {(provided) => (
-          <div ref={provided.innerRef} {...provided.droppableProps}>
+          <div
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              flex: '1',
+              minHeight: '100%',
+            }}
+          >
             {todos.map(({ title, description, _id }: ITodo, index: number) => (
-              <Todo
-                key={_id}
-                title={title}
-                description={description}
-                todoId={_id}
-                boardId={boardId}
-                index={index}
-              />
+              <Todo key={_id} title={title} description={description} todoId={_id} boardId={boardId} index={index} />
             ))}
             {provided.placeholder}
           </div>
@@ -76,17 +67,16 @@ export const Card: React.FC<CardProps> = ({
           disabled={isEditMode}
           type="dashed"
           style={{
-            width: "100%",
-            marginTop: "20px",
-            alignSelf: "flex-start",
-            backgroundColor: "#1890ff",
-            borderColor: "#1890ff",
-            color: "#fff",
+            width: '100%',
+            marginTop: '20px',
+            backgroundColor: '#1890ff',
+            borderColor: '#1890ff',
+            color: '#fff',
           }}
         >
           Add todo
         </Button>
       )}
     </BasicCard>
-  );
-};
+  )
+}

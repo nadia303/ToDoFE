@@ -1,73 +1,56 @@
-import React, { useCallback, useState } from "react";
-import {
-  Button,
-  Space,
-  Row,
-  Col,
-  Typography,
-  Card,
-  Layout,
-  Input,
-  Spin,
-} from "antd";
-import { useGetAllBoards } from "../../hooks/useGetAllBoards";
-import { useCreateBoard } from "../../hooks/useCreateBoard";
-import { Board } from "../../components/Board";
-import { AddEditBoardTitle } from "../../components/AddEditBoardTile";
-import { IBoard } from "../../types";
+import React, { useCallback, useState } from 'react'
+import { Button, Space, Row, Col, Typography, Card, Layout, Input, Spin } from 'antd'
+import { useGetAllBoards } from '../../hooks/useGetAllBoards'
+import { useCreateBoard } from '../../hooks/useCreateBoard'
+import { Board } from '../../components/Board'
+import { AddEditBoardTitle } from '../../components/AddEditBoardTile'
+import { IBoard } from '../../types'
 
-const { Title } = Typography;
-const { Content } = Layout;
-const { Search } = Input;
+const { Title } = Typography
+const { Content } = Layout
+const { Search } = Input
 
 export const BoardsListPage: React.FC = () => {
-  const [searchId, setSearchId] = useState("");
-  const [isCreateModeBoard, setIsCreateModeBoard] = useState(false);
-  const { data, isPending: isLoadingBoards } = useGetAllBoards(searchId);
-  const { create, isPending: isLoadingNewBoard } = useCreateBoard();
+  const [searchId, setSearchId] = useState('')
+  const [isCreateModeBoard, setIsCreateModeBoard] = useState(false)
+  const { data, isPending: isLoadingBoards } = useGetAllBoards(searchId)
+  const { create, isPending: isLoadingNewBoard } = useCreateBoard()
 
   const handleSubmit = useCallback(
     (data: { name: string }) => {
-      create(data);
-      setIsCreateModeBoard(false);
+      create(data)
+      setIsCreateModeBoard(false)
     },
-    [create]
-  );
+    [create],
+  )
 
   const handleOnClick = () => {
-    setIsCreateModeBoard(true);
-  };
+    setIsCreateModeBoard(true)
+  }
 
   const handleSearch = (value: string) => {
-    setSearchId(value);
-  };
+    setSearchId(value)
+  }
 
   if (isLoadingBoards || isLoadingNewBoard) {
     return (
-      <Space
-        direction="vertical"
-        style={{ width: "100%", textAlign: "center" }}
-      >
+      <Space direction="vertical" style={{ width: '100%', textAlign: 'center' }}>
         <Spin size="large" fullscreen />
       </Space>
-    );
+    )
   }
 
   return (
     <Layout>
-      <Content style={{ padding: "24px", maxWidth: "1440px", margin: "auto" }}>
-        <Space direction="vertical" style={{ width: "100%" }}>
-          <Row gutter={16} style={{ marginBottom: "15px" }}>
+      <Content style={{ padding: '24px', maxWidth: '1440px', margin: 'auto' }}>
+        <Space direction="vertical" style={{ width: '100%' }}>
+          <Row gutter={16} style={{ marginBottom: '15px' }}>
             <Col span={24}>
-              <Search
-                placeholder="Enter a board ID here"
-                enterButton
-                onSearch={handleSearch}
-              />
+              <Search placeholder="Enter a board ID here" enterButton onSearch={handleSearch} />
             </Col>
           </Row>
           {data?.data.map(({ id, name, todos }: IBoard) => (
-            <Row gutter={16} key={id} style={{ marginBottom: "25px" }}>
+            <Row gutter={16} key={id} style={{ marginBottom: '25px' }}>
               <Col xs={24}>
                 <Board boardName={name} boardId={id} initialTodos={todos} />
               </Col>
@@ -76,10 +59,7 @@ export const BoardsListPage: React.FC = () => {
           {isCreateModeBoard && (
             <Card style={{ marginBottom: 16 }}>
               <Title level={4}>Create New Board</Title>
-              <AddEditBoardTitle
-                setIsEditMode={setIsCreateModeBoard}
-                onSubmit={handleSubmit}
-              />
+              <AddEditBoardTitle setIsEditMode={setIsCreateModeBoard} onSubmit={handleSubmit} />
             </Card>
           )}
           <Button
@@ -87,9 +67,9 @@ export const BoardsListPage: React.FC = () => {
             onClick={handleOnClick}
             type="primary"
             style={{
-              backgroundColor: "#52c41a",
-              borderColor: "#52c41a",
-              marginTop: "30px",
+              backgroundColor: '#52c41a',
+              borderColor: '#52c41a',
+              marginTop: '30px',
             }}
           >
             Add New Board
@@ -97,5 +77,5 @@ export const BoardsListPage: React.FC = () => {
         </Space>
       </Content>
     </Layout>
-  );
-};
+  )
+}
