@@ -13,7 +13,7 @@ const { Search } = Input
 export const BoardsListPage: React.FC = () => {
   const [searchId, setSearchId] = useState('')
   const [isCreateModeBoard, setIsCreateModeBoard] = useState(false)
-  const { data, isPending: isLoadingBoards } = useGetAllBoards(searchId)
+  const { data, isPending: isLoadingBoards, refetch } = useGetAllBoards(searchId)
   const { create, isPending: isLoadingNewBoard } = useCreateBoard()
 
   const handleSubmit = useCallback(
@@ -26,6 +26,11 @@ export const BoardsListPage: React.FC = () => {
 
   const handleOnClick = () => {
     setIsCreateModeBoard(true)
+  }
+
+  const handleBackClick = () => {
+    setSearchId('')
+    refetch()
   }
 
   const handleSearch = (value: string) => {
@@ -49,6 +54,7 @@ export const BoardsListPage: React.FC = () => {
               <Search placeholder="Enter a board ID here" enterButton onSearch={handleSearch} />
             </Col>
           </Row>
+          {searchId && <Button onClick={handleBackClick}>Back</Button>}
           {data?.data.length === 0 ? (
             <Space direction="vertical" style={{ width: '100%', textAlign: 'center' }}>
               <Typography>No results found</Typography>
@@ -68,18 +74,20 @@ export const BoardsListPage: React.FC = () => {
                   <AddEditBoardTitle setIsEditMode={setIsCreateModeBoard} onSubmit={handleSubmit} />
                 </Card>
               )}
-              <Button
-                disabled={isCreateModeBoard}
-                onClick={handleOnClick}
-                type="primary"
-                style={{
-                  backgroundColor: '#52c41a',
-                  borderColor: '#52c41a',
-                  marginTop: '30px',
-                }}
-              >
-                Add New Board
-              </Button>
+              {!searchId && (
+                <Button
+                  disabled={isCreateModeBoard}
+                  onClick={handleOnClick}
+                  type="primary"
+                  style={{
+                    backgroundColor: '#52c41a',
+                    borderColor: '#52c41a',
+                    marginTop: '30px',
+                  }}
+                >
+                  Add New Board
+                </Button>
+              )}
             </>
           )}
         </Space>
