@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-// export const apiUrl = process.env.REACT_APP_API_URL
+export const apiUrl = process.env.REACT_APP_API_URL
 
-export const apiUrl = 'https://todobe-production-2979.up.railway.app'
+// export const apiUrl = 'https://todobe-production-2979.up.railway.app'
 
 export const apiConfig = {
   baseURL: apiUrl,

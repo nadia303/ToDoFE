@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction, useCallback, useEffect } from 'react'
-import { Button, Form, Input, Space } from 'antd'
+import { Button, Form, Input, Space, Modal } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import { ITodo } from '../../types'
 
@@ -7,20 +7,30 @@ interface AddTodoProps {
   setIsEditMode: Dispatch<SetStateAction<boolean>>
   onSubmit: (data: ITodo) => void
   initialValues?: { title: string; description: string }
+  visible: boolean
+  title?: string
 }
 
-export const AddEditTodo: FC<AddTodoProps> = ({ setIsEditMode, onSubmit, initialValues }) => {
+export const AddEditTodo: FC<AddTodoProps> = ({
+  setIsEditMode,
+  onSubmit,
+  initialValues,
+  visible,
+  title = 'Add Todo',
+}) => {
   const [form] = Form.useForm()
 
   const handleSubmit = useCallback(
     (data: ITodo) => {
       onSubmit(data)
+      form.resetFields()
       setIsEditMode(false)
     },
-    [onSubmit, setIsEditMode],
+    [form, onSubmit, setIsEditMode],
   )
 
   const handleCancel = () => {
+    form.resetFields()
     setIsEditMode(false)
   }
 
@@ -31,15 +41,7 @@ export const AddEditTodo: FC<AddTodoProps> = ({ setIsEditMode, onSubmit, initial
   }, [initialValues, form])
 
   return (
-    <div
-      style={{
-        border: '1px solid #ccc',
-        padding: '16px',
-        borderRadius: '8px',
-        backgroundColor: '#f5f5f5',
-        marginTop: '16px',
-      }}
-    >
+    <Modal title={title} open={visible} footer={null} onCancel={handleCancel} destroyOnClose>
       <Form form={form} name="validateOnly" layout="vertical" autoComplete="off" onFinish={handleSubmit}>
         <Form.Item
           label="Title"
@@ -74,6 +76,6 @@ export const AddEditTodo: FC<AddTodoProps> = ({ setIsEditMode, onSubmit, initial
           </Button>
         </Space>
       </Form>
-    </div>
+    </Modal>
   )
 }
